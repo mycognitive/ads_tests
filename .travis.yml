@@ -1,0 +1,58 @@
+# Travis CI build configuration config file.
+# Used environment variables (see: http://docs.travis-ci.com/user/ci-environment/):
+#   TRAVIS_BUILD_DIR - The absolute path to the directory where the repository being built has been copied on the worker. (e.g. "/home/travis/build/mycognitive/ads")
+#   TRAVIS_REPO_SLUG - The slug (in form: owner_name/repo_name) of the repository currently being built. (e.g. "mycognitive/ads_features")
+
+# Before Install
+# Use this to prepare the system to install prerequisites or dependencies.
+# Commonly used to update git repository submodules and do similar tasks that need to be performed before dependencies are installed.
+before_install:
+  - env
+  - sudo sysctl kernel.hostname=$HOST
+  - sudo easy_install pip
+
+# Install
+# Use this to install any prerequisites or dependencies necessary to run your build.
+install:
+  - set -e # Exit immediately if a subshell command exits with a non-zero status (man sh).
+  - git clone https://github.com/mycognitive/ads_tests && cd ads_tests
+  - make install
+
+# Before Script
+# Use this to prepare your build for testing (e.g. copy database configurations, environment variables, etc.).
+before_script:
+  - set -e # Exit immediately if a subshell command exits with a non-zero status (man sh).
+
+# Script
+# Main build command to run.
+# All commands must exit with code 0 on success. Anything else is considered failure.
+script:
+  - make test
+
+# After Script
+# Test result is exported to TRAVIS_TEST_RESULT.
+after_script:
+  - pwd
+
+# Environment
+env:
+  global:
+    - HOST="ads.server" URL="http://$HOST/" SRCDIR="/var/www/ads"
+  matrix:
+    - SELENIUM_HOST="qa.ads.london" SELENIUM_BROWSER='chrome'  SELENIUM_VERSION='39' SELENIUM_PLATFORM='Linux'
+# - SELENIUM_BROWSER='firefox' SELENIUM_VERSION='34' SELENIUM_PLATFORM='Linux'
+# - SELENIUM_BROWSER='safari'  SELENIUM_VERSION='8'  SELENIUM_PLATFORM='MAC'
+# - SELENIUM_BROWSER='opera'   SELENIUM_VERSION='12' SELENIUM_PLATFORM='Windows 7'
+# - SELENIUM_BROWSER='internet explorer' SELENIUM_VERSION='11' SELENIUM_PLATFORM='Windows 8.1'
+
+notifications:
+  email: false
+
+addons:
+  hosts:
+    - ads.server
+
+language: python
+
+python:
+  - 3.4
