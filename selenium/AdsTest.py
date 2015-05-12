@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import os
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -16,6 +15,7 @@ from xvfbwrapper import Xvfb
 import unittest
 import logging
 import string
+import random
 import time
 import re
 from base64 import b64encode
@@ -48,10 +48,9 @@ class AdsTest(unittest.TestCase):
 
         # Set-up testing URL.
         self.base_url = os.environ.get('SELENIUM_HOST', self.args.host)
-
-        # Set-up credentials (@todo: http://sqa.stackexchange.com/q/12892/2840)
-        #if self.args.user or self.args.password:
-            #self.headers = { 'Authorization': 'Basic %s' % b64encode(bytes(self.args.user + ':' + self.args.password, "utf-8")).decode("ascii") }
+        if not self.base_url:
+            self.log.error("Selenium host is required.")
+            self.driver.quit()
 
         # Set-up other settings.
         self.driver.implicitly_wait(30)
@@ -60,26 +59,30 @@ class AdsTest(unittest.TestCase):
         self.driver.maximize_window()
 
     def is_text_present(self, text):
-        self.log.info("Checking if text '{0}' is present on the page.".format(text))
+        self.log.info("Checking if text '{}' is present at {}.".format(text, self.driver.current_url))
         return str(text) in self.driver.page_source
 
     def is_element_present(self, how, what):
-        self.log.info("Checking if '{0}' element is present in '{1}' on the page.".format(what, how))
+        self.log.info("Checking if '{}' element is present in '{}' at {}.".format(what, how, self.driver.current_url))
         try: self.driver.find_element(by=how, value=what)
         except NoSuchElementException as e: return False
         return True
 
     def is_alert_present(self):
-        self.log.info("Checking if alert is present.")
+        self.log.info("Checking if alert is present at {}.".format(self.driver.current_url))
         try: self.driver.switch_to_alert()
         except NoAlertPresentException as e: return False
         return True
 
-    def random_word(length=6, chars=string.ascii_lowercase):
-        return ''.join(random.choice(chars) for i in range(length))
+    def random_word(self, length=6, chars=string.ascii_lowercase):
+        word = ''.join(random.choice(chars) for i in range(length))
+        self.log.debug("Generating random word: {}.".format(word))
+        return word
 
-    def random_number(length=3):
-        return ''.join(random.choice(string.digits) for i in range(length))
+    def random_number(self, length=3):
+        number = ''.join(random.choice(string.digits) for i in range(length))
+        self.log.debug("Generating random number: {}.".format(number))
+        return number
 
     def close_alert_and_get_its_text(self):
         try:
@@ -107,28 +110,22 @@ class AdsTest(unittest.TestCase):
         self.assertEqual([], self.verificationErrors)
 
     def page_has_loaded(self):
-        self.log.info("Checking if page is loaded.")
+        self.log.info("Checking if {} page is loaded.".format(self.driver.current_url))
         page_state = self.driver.execute_script('return document.readyState;')
         return page_state == 'complete'
 
-    def is_verbose(self):
-        return bool(os.environ.get('VERBOSE', self.args.verbose))
-
-    def log(self, msg=None, level='info', **kwargs):
-        levels = {
-            'debug':   logging.debug,
-            'info':    logging.info,
-            'warning': logging.warning,
-            'error':   logging.error
-        }
-        levels.get(level, logging.info)(msg)
-
-    def echo(self, msg, **kwargs):
-        print("INFO: ", msg) if self.is_verbose else ''
+    #def log(self, msg=None, level='info', **kwargs):
+    #    levels = {
+    #        'debug':   logging.debug,
+    #        'info':    logging.info,
+    #        'warning': logging.warning,
+    #        'error':   logging.error
+    #    }
+    #    levels.get(level, logging.info)(msg)
 
     def make_screenshot(self, filename='screenshot'):
         self.driver.save_screenshot(filename)
-        self.log.debug("Screenshot saved as {0}.".format(filename))
+        self.log.debug("Screenshot saved as {} at {}.".format(filename, self.driver.current_url))
 
     def tearDown(self):
         self.log.debug('Finishing up.')
