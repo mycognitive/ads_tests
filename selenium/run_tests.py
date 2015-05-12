@@ -9,8 +9,6 @@ import argparse
 import inspect
 import logging
 
-from AdsTest import AdsTest
-
 if __name__ == '__main__':
     # Parse arguments.
     parser = argparse.ArgumentParser(add_help=False)
@@ -18,7 +16,7 @@ if __name__ == '__main__':
     parser.add_argument("-v", "--verbose",  action="store_true", dest="verbose",  help="increase output verbosity" )
     parser.add_argument("-d", "--debug",    action="store_true", dest="debug",    help="show debug messages" )
     parser.add_argument("-h", "--host",     action="store",      dest="host",     help="Destination host" )
-    parser.add_argument("-b", "--browser",  action="store",      dest="browser",  help="Browser driver.", choices=["Firefox", "Chrome", "IE", "Opera"] )
+    parser.add_argument("-b", "--browser",  action="store",      dest="browser",  help="Browser driver.", choices=["Firefox", "Chrome", "IE", "Opera", "PhantomJS"] )
     #parser.add_argument("-u", "--user",     action="store",      dest="user",     help="Username for basic authentication." )
     #parser.add_argument("-p", "--password", action="store",      dest="password", help="Password for basic authentication." )
     parser.add_argument('files', nargs='*')
@@ -43,12 +41,14 @@ if __name__ == '__main__':
             alltests.addTest(make_suite(obj))
 
     # Set-up logger
-    if args.verbose or args.debug:
+    verbose = bool(os.environ.get('VERBOSE', args.verbose))
+    debug   = bool(os.environ.get('DEBUG', args.debug))
+    if verbose or debug:
         logging.basicConfig( stream=sys.stdout )
         root = logging.getLogger()
-        root.setLevel(logging.INFO if args.verbose else logging.DEBUG)
+        root.setLevel(logging.INFO if verbose else logging.DEBUG)
         ch = logging.StreamHandler(sys.stdout)
-        ch.setLevel(logging.INFO if args.verbose else logging.DEBUG)
+        ch.setLevel(logging.INFO if verbose else logging.DEBUG)
         ch.setFormatter(logging.Formatter('%(asctime)s %(levelname)s: %(name)s: %(message)s'))
         root.addHandler(ch)
     else:
