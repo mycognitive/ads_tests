@@ -7,12 +7,13 @@ from AdsTest import AdsTest
 
 import time
 
-class AdsTestPagesBasic(AdsTest):
+class AdsTestRegistration(AdsTest):
 
     def test_registration(self):
         driver = self.driver
-        driver.get(self.base_url + "/user/register")
         self.log.info("Registering new account.")
+        driver.get(self.base_url + "/user/register")
+        self.is_error_not_present()
         ymd = time.strftime("%Y%m%d")
         username = "test_" + self.random_word() + "_" + ymd
         email = self.random_word() + "_" + ymd +  "@example.com"
@@ -25,3 +26,4 @@ class AdsTestPagesBasic(AdsTest):
         driver.find_element_by_id("edit-submit--2").click()
         self.assertTrue(self.is_text_present("Thank you for applying for an account."))
         self.assertTrue(driver.find_element_by_xpath(u'//a[text()="Site map"]'))
+        self.is_error_not_present()

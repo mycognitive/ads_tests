@@ -13,10 +13,9 @@ class AdsTestPagesBasic(AdsTest):
         driver.get(self.base_url + "/")
         self.log.debug("Home page loaded.")
 
-        try: self.is_text_present("Browse By Category")
-        except AssertionError as e: self.verificationErrors.append(str(e))
-        try: self.is_text_present("Browse By Location")
-        except AssertionError as e: self.verificationErrors.append(str(e))
+        self.assertTrue(self.is_text_present("Browse by category"))
+        self.assertTrue(self.is_text_present("Browse by category"))
+        self.is_error_not_present()
 
         link = driver.find_element_by_xpath(u'//a[contains(text(), "Site map")]')
         self.log.debug("Sitemap link present.")
