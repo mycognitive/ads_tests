@@ -109,10 +109,6 @@ class AdsTest(unittest.TestCase):
                 time.sleep(0.1)
         raise Exception('Timeout waiting for {}'.format(condition_function.__name__))
 
-        def tearDown(self):
-            self.driver.quit()
-        self.assertEqual([], self.verificationErrors)
-
     def page_has_loaded(self):
         self.log.info("Checking if {} page is loaded.".format(self.driver.current_url))
         page_state = self.driver.execute_script('return document.readyState;')
