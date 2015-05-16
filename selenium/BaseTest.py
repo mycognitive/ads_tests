@@ -76,7 +76,8 @@ class BaseTest(unittest.TestCase):
 
     def is_error_not_present(self, error = "(?i)Example|Lorem|ipsum|on line|MySQL|error"):
         self.log.info("Checking if page has not any errors shown at {}.".format(self.driver.current_url))
-        return self.assertNotRegex(self.driver.page_source, error)
+        self.assertNotRegex(self.driver.page_source, error)
+        return True
 
     def random_word(self, length=6, chars=string.ascii_lowercase):
         word = ''.join(random.choice(chars) for i in range(length))

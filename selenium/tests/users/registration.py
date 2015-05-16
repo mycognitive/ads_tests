@@ -24,6 +24,6 @@ class AdsTestRegistration(BaseTest):
         driver.find_element_by_id("edit-pass-pass1").send_keys(password)
         driver.find_element_by_id("edit-pass-pass2").send_keys(password)
         driver.find_element_by_id("edit-submit--2").click()
-        self.assertTrue(self.is_text_present("Thank you for applying for an account."))
+        self.assertRegex(self.driver.page_source, "Thank you for applying for an account|Log in successful")
         self.assertTrue(driver.find_element_by_xpath(u'//a[text()="Site map"]'))
         self.is_error_not_present()
