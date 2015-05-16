@@ -37,13 +37,13 @@ after_script:
 # Environment
 env:
   global:
-    - HOST="ads.server" URL="http://$HOST/" SRCDIR="/var/www/ads"
+    - HOST="ads.server"
   matrix:
-    - SELENIUM_HOST="qa.ads.london" SELENIUM_BROWSER='chrome'  SELENIUM_VERSION='39' SELENIUM_PLATFORM='Linux'
-# - SELENIUM_BROWSER='firefox' SELENIUM_VERSION='34' SELENIUM_PLATFORM='Linux'
-# - SELENIUM_BROWSER='safari'  SELENIUM_VERSION='8'  SELENIUM_PLATFORM='MAC'
-# - SELENIUM_BROWSER='opera'   SELENIUM_VERSION='12' SELENIUM_PLATFORM='Windows 7'
-# - SELENIUM_BROWSER='internet explorer' SELENIUM_VERSION='11' SELENIUM_PLATFORM='Windows 8.1'
+    - SELENIUM_BROWSER='Firefox' SELENIUM_PLATFORM='Linux' SELENIUM_HOST="http://guest:guestpass@qa.ads.london" 
+# - SELENIUM_BROWSER='Chrome' SELENIUM_PLATFORM='Linux'
+# - SELENIUM_BROWSER='Safari' SELENIUM_PLATFORM='MAC'
+# - SELENIUM_BROWSER='Opera'  SELENIUM_PLATFORM='Windows 7'
+# - SELENIUM_BROWSER='IE' SELENIUM_PLATFORM='Windows 8.1'
 
 notifications:
   email: false
