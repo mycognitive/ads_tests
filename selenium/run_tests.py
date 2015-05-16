@@ -37,7 +37,7 @@ if __name__ == '__main__':
     # Add all tests.
     alltests = unittest.TestSuite()
     for name, obj in inspect.getmembers(sys.modules[__name__]):
-        if inspect.isclass(obj) and name.startswith("AdsTest") and len(name) > len("AdsTest"):
+        if inspect.isclass(obj) and name.startswith("AdsTest"):
             alltests.addTest(make_suite(obj))
 
     # Set-up logger

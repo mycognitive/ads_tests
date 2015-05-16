@@ -3,11 +3,11 @@
 import os
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
-from AdsTest import AdsTest
+from BaseTest import BaseTest
 
 import time
 
-class AdsTestRegistration(AdsTest):
+class AdsTestRegistration(BaseTest):
 
     def test_registration(self):
         driver = self.driver

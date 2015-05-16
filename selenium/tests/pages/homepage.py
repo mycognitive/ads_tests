@@ -4,9 +4,9 @@ import sys, os
 import unittest
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../..'))
 
-from AdsTest import AdsTest
+from BaseTest import BaseTest
 
-class AdsTestPagesBasic(AdsTest):
+class AdsTestPagesBasic(BaseTest):
 
     def test_homepage(self):
         driver = self.driver

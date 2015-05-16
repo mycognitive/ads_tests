@@ -20,7 +20,7 @@ import time
 import re
 from base64 import b64encode
 
-class AdsTest(unittest.TestCase):
+class BaseTest(unittest.TestCase):
     def __init__(self, *args, cargs=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.vdisplay = Xvfb(width=1280, height=720)
