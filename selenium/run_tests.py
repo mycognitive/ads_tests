@@ -3,6 +3,7 @@
 #   ./run_tests.py -h http://example.com/ tests/**/*.py
 #   SELENIUM_BROWSER=Firefox SELENIUM_HOST=http://example.com python3 run_tests.py tests/**/*.py
 
+import os
 import sys
 import unittest
 import argparse
