@@ -136,3 +136,15 @@ class BaseTest(unittest.TestCase):
         self.log.debug('Closing display.')
         self.vdisplay.stop()
 
+    @property
+    def failureException(self):
+        class MyFailureException(AssertionError):
+            def __init__(self_, *args, **kwargs):
+                screenshot_dir = os.environ.get('REPORTS_DIR', self.args.dir) + '/screenshots'
+                if not os.path.exists(screenshot_dir):
+                    os.makedirs(screenshot_dir)
+                self.driver.save_screenshot('{0}/{1}.png'.format(screenshot_dir, self.id()))
+                return super(MyFailureException, self_).__init__(*args, **kwargs)
+        MyFailureException.__name__ = AssertionError.__name__
+        return MyFailureException
+

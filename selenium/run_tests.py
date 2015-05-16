@@ -17,6 +17,7 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--debug",    action="store_true", dest="debug",    help="show debug messages" )
     parser.add_argument("-h", "--host",     action="store",      dest="host",     help="Destination host" )
     parser.add_argument("-b", "--browser",  action="store",      dest="browser",  help="Browser driver.", choices=["Firefox", "Chrome", "IE", "Opera", "PhantomJS"] )
+    parser.add_argument("-r", "--reports-dir", action="store",   dest="dir",      help="Directory to save screenshots.", default="reports")
     #parser.add_argument("-u", "--user",     action="store",      dest="user",     help="Username for basic authentication." )
     #parser.add_argument("-p", "--password", action="store",      dest="password", help="Password for basic authentication." )
     parser.add_argument('files', nargs='*')
