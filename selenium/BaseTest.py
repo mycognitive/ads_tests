@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 from xvfbwrapper import Xvfb
+from base64 import b64encode
 
 import unittest
 import logging
@@ -18,7 +19,7 @@ import string
 import random
 import time
 import re
-from base64 import b64encode
+import contextlib
 
 class BaseTest(unittest.TestCase):
     def __init__(self, *args, cargs=None, **kwargs):
@@ -27,6 +28,7 @@ class BaseTest(unittest.TestCase):
         self.vdisplay.start()
         self.args=cargs
         self.log=logging
+        self.cwd=os.path.realpath(__file__)
 
     def setUp(self):
         # Set up browser profile.
@@ -74,7 +76,7 @@ class BaseTest(unittest.TestCase):
         except NoAlertPresentException as e: return False
         return True
 
-    def is_error_not_present(self, error = "(?i)Example|Lorem|ipsum|on line|MySQL|error"):
+    def is_error_not_present(self, error = "(?i)Exception|on line|MySQL|not a valid|error"):
         self.log.info("Checking if page has not any errors shown at {}.".format(self.driver.current_url))
         self.assertNotRegex(self.driver.page_source, error)
         return True
@@ -123,6 +125,21 @@ class BaseTest(unittest.TestCase):
     #        'error':   logging.error
     #    }
     #    levels.get(level, logging.info)(msg)
+
+    def page_has_loaded2():
+        self.log.info("Checking if {} page is loaded.".format(self.driver.current_url))
+        try:
+            new_page = browser.find_element_by_tag_name('html')
+            return new_page.id != old_page.id
+        except NoSuchElementException:
+            return False
+
+    @contextlib.contextmanager
+    def wait_for_page_load(self, timeout=10):
+        self.log.debug("Waiting for page to load at {}.".format(self.driver.current_url))
+        old_page = self.find_element_by_tag_name('html')
+        yield
+        WebDriverWait(self, timeout).until(staleness_of(old_page))
 
     def make_screenshot(self, filename='screenshot'):
         self.driver.save_screenshot(filename)
