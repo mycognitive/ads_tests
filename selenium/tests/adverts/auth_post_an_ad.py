@@ -9,6 +9,8 @@ class AdsTestAuthPostAnAd(BaseTest):
         driver = self.driver
         self.log.info("Creating new account.")
         driver.get(self.base_url + "/user/register")
+        honeypot = driver.find_element_by_name('honeypot_time')
+        driver.execute_script("arguments[0].value = 0;", honeypot) if honeypot else None
         self.is_error_not_present()
         ymd = time.strftime("%Y%m%d")
         self.username = "test_" + self.random_word() + "_" + ymd
