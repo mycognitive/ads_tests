@@ -76,7 +76,7 @@ class BaseTest(unittest.TestCase):
         except NoAlertPresentException as e: return False
         return True
 
-    def is_error_not_present(self, error = "(?i)Exception|on line|MySQL|not a valid|error"):
+    def is_error_not_present(self, error = "(?i)Exception|on line|MySQL|not a valid|Warning:|error"):
         self.log.info("Checking if page has not any errors shown at {}.".format(self.driver.current_url))
         self.assertNotRegex(self.driver.page_source, error)
         return True
