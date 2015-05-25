@@ -1,4 +1,4 @@
-SHELL:=/bin/bash -O globstar
+SHELL:=bash -O globstar
 SELENIUM_HOST?=http://localhost
 SELENIUM_BROWSER?=Firefox
 ARGS?=
